@@ -15,6 +15,7 @@ def index(request):
         "categorias": categorias
     })
 
+#Funcion para desplegar los productos de una categoria en especifico
 def vista_categoria(request, id):
     categoria_seleccionada = Categoria.objects.get(id=id)
     listado_activo = Lista.objects.filter(es_activo=True, categoria=categoria_seleccionada)
@@ -23,6 +24,7 @@ def vista_categoria(request, id):
         "categorias": Categoria.objects.all()
     })
 
+#Funcion para ver los detalles de un producto en especifico
 def listado(request, id):
     loguser= request.user
     listaProductos = Lista.objects.get(pk=id)
@@ -30,7 +32,7 @@ def listado(request, id):
     Comentarios = Comentario.objects.filter(lista=listaProductos)
     Ofertas = Oferta.objects.filter(oferta_lista=listaProductos)
     
-    Ganador = listaProductos.seller.username
+    Ganador = listaProductos.seller.username 
 
     return render(request, "auctions/listado.html",{
         "listado": listaProductos,
@@ -41,22 +43,23 @@ def listado(request, id):
         "loguser": loguser,
     }) 
   
+#Funcion para agregar una oferta
 def agregar_oferta(request, id):
     loguser= request.user
     Producto = Lista.objects.get(pk=id)
     Puja = request.POST['puja']
     WatchlistActivo = Producto.watchlist.filter(pk=loguser.id).exists()
     Comentarios = Comentario.objects.filter(lista=Producto)
-    Ganador = loguser.username = Producto.seller.username
-
+    Ganador = loguser.username = Producto.seller.username #
+    #Validamos que la oferta sea mayor a la actual
     if float(Puja) > Producto.precio.oferta:
-        nuevoPrecio = Oferta(user = loguser, oferta=Puja)
+        nuevoPrecio = Oferta(user = loguser, oferta=Puja) #Creamos un nuevo objeto oferta
         nuevoPrecio.save()
         Producto.precio = nuevoPrecio
         Producto.save()
-        return render(request, "auctions/listado.html",{
+        return render(request, "auctions/listado.html",{ #Retornamos a la pagina de detalles
             "listado": Producto,
-            "WatchlistActivo": WatchlistActivo,
+            "WatchlistActivo": WatchlistActivo, #Actuzalizamos el estado del watchlist
             "Comentarios": Comentarios,
             "Estado": True,
             "mensaje": "Oferta realizada con exito",
@@ -73,6 +76,7 @@ def agregar_oferta(request, id):
         })
 
 
+#Logica para agregar eliminar y ver un producto en nuestra watchlist
 def agregar_watchlist(request, id):
     loguser= request.user
     listaProductos = Lista.objects.get(pk=id)
@@ -93,6 +97,7 @@ def ver_watchlist(request):
         "watchlist": watchView
     })
 
+#Funcion para agregar un comentario a la lista correspondiente
 def agregar_comentario(request, id):
     LogUser = request.user
     ListaProducto = Lista.objects.get(pk=id)
@@ -152,7 +157,7 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/register.html")
-        
+ #Funcion para crear nuevos productos    
 def crear_lista(request):
     categorias = Categoria.objects.all()
 

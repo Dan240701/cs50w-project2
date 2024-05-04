@@ -5,6 +5,7 @@ from django.db import models
 class User(AbstractUser):
     pass
 
+#Clase para las categorias de las listas
 class Categoria(models.Model):
     nombre = models.CharField(max_length=64)
     descripcion = models.CharField(max_length=200)
@@ -13,6 +14,7 @@ class Categoria(models.Model):
     def __str__(self):
         return f"{self.nombre}"
 
+#Clase para las ofertas de los usuarios en las listas
 class Oferta(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name="usuario_oferta")
     oferta = models.DecimalField(max_digits=10, decimal_places=2)
@@ -21,6 +23,7 @@ class Oferta(models.Model):
     def __str__(self):
         return f"{self.oferta}"
 
+#Clase para las listas de los usuarios
 class Lista(models.Model):
     titulo = models.CharField(max_length=64)
     descripcion = models.CharField(max_length=200)
@@ -35,7 +38,7 @@ class Lista(models.Model):
     def __str__(self):
         return f"{self.titulo}"
     
-    
+#Clase para los comentarios de los usuarios en las listas
 class Comentario(models.Model):
     comentario = models.CharField(max_length=200)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, related_name="usuario")
