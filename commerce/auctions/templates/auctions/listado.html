@@ -1,0 +1,139 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+
+<div class="title" style="margin-top: 1.5rem; margin-bottom: 2.5rem;">
+  <h2>Listado: {{ listado.titulo }}</h2>
+
+</div>
+<div class="parent">
+  <!--Enviar notificacion de la puja-->
+  <div class="notificaciones">
+    {% if mensaje %}
+    {% if Estado %}
+    <div class="alert alert-success" role="alert">
+      <strong> {{ mensaje}} </strong>
+    </div>
+    {% else %}
+    <div class="alert alert-danger" role="alert">
+      <strong> {{ mensaje}} </strong>
+    </div>
+    {% endif %}
+    {% endif %}
+
+    <!--Mensaje del ganador-->
+    {% if not listado.es_activo and user == listado.precio.user %}
+    <div class="alert alert-success" role="alert">
+      <strong>¡Felicidades! Eres el ganador de esta subasta</strong>
+    </div>
+    {% endif %}
+    <div class="div1">
+
+      <!--Detalles del Producto-->
+      <div class="img">
+        <img src="{{ listado.image_url }}" alt="{{ listado.titulo }}" height="200px"
+          style="margin-bottom: 2.5rem; margin-top: 2.5rem; margin-left: 3.0rem;">
+      </div>
+      <div class="detalle">
+
+        <h2>Detalles</h2>
+        <p><strong>{{ listado.descripcion }}</strong></p>
+        <h3>${{ listado.precio }} </h3>
+        <li>Listado por: {{ listado.seller }}</li>
+        <li>Categoria: {{ listado.categoria }}</li>
+
+        <!--Boton de Oferta-->
+        {% if user.is_authenticated %}
+        <form action="{% url 'agregar_oferta' id=listado.id %}" method="post">
+          {% csrf_token %}
+          <div class="form-group" style="margin-top: 2.0rem;">
+            <label for="puja">Realizar Puja</label>
+            <input type="number" class="form-control col-4" min="0" name="puja" placeholder="Ingresa tu oferta">
+          </div>
+          <button type="submit" class="btn btn-primary">Pujar</button>
+        </form>
+        {% endif %}
+      </div>
+
+      <!--Botones de seguimiento y cierre de subasta-->
+      <div class="listoptions">
+        <!--Boton de seguimiento-->
+        {% if user.is_authenticated and listado.es_activo %}
+
+        <!--Cerrar Subasta-->
+        {% if listado.seller.username == loguser.username %}
+        <form method="post" action="{% url 'cerrar_subasta' id=listado.id %}" class="mx-3 mb-2">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-outline-danger">Cerrar Subasta</button>
+        </form>
+        {% endif %}
+
+        {% if WatchlistActivo %}
+        <form method="post" action="{% url 'eliminar_watchlist' id=listado.id %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-outline-warning">Quitar del watchlist</button>
+        </form>
+        {% else %}
+        <form method="post" action="{% url 'agregar_watchlist' id=listado.id %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-outline-primary">Agregar a watchlist</button>
+        </form>
+        {% endif %}
+
+        {% else %}
+        Inicia sesion para agregar a tu lista de seguimiento
+        {% endif %}
+
+      </div>
+
+    </div>
+
+
+  </div>
+
+
+
+  <div class="div 2">
+    <!--Seccion de Comentarios del producto-->
+    {% if user.is_authenticated %}
+    <h2>Comentarios</h2>
+
+    <form action="{% url 'agregar_comentario' id=listado.id %}" method="POST">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="Comentario">Nota personal</label>
+        <textarea class="form-control col-md-12" name="comentario" placeholder="Escribe tu comemtario personal" rows="2"
+          style="width: 45rem;"></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Enviar comentario</button>
+    </form>
+
+
+
+    <h2>Todos los Comentarios</h2>
+    {% for comentario in Comentarios %}
+    <div class="list-group mt-4">
+      <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+        <div class="d-flex w-100 justify-content-between">
+          <h5 class="mb-0">Comentario hecho por: {{ comentario.user }}</h5>
+          <small>Publicado el {{ comentario.fecha_creacion|date:"d F Y" }}</small>
+        </div>
+        <p class="mb-1">{{ comentario.comentario }}</small>
+      </a>
+    </div>
+    {% endfor %}
+
+    {% endif %}
+  </div>
+
+
+</div>
+</div>
+
+
+
+
+
+
+{% endblock %}

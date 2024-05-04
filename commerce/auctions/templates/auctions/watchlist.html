@@ -1,0 +1,24 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<h2>Watchlist</h2>
+
+<div class="row">
+    {% for listado in watchlist %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <img class="card-img-top" src="{{ listado.image_url }}" alt="{{ listado.titulo }}">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <a href="{% url 'listado' id=listado.id %}">{{ listado.titulo }}</a>
+                    </h5>
+                    <p class="card-text">${{ listado.precio }}</p>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <p>No tienes ningun producto en tu lista de seguimiento</p>
+    {% endfor %}
+</div>
+
+{% endblock %}

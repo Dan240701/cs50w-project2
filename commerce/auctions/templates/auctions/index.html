@@ -1,0 +1,70 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<div class="title">
+    <h2>Listas Activas</h2>
+</div>
+
+<!--LISTADO ACTIVO DE SUBASTAS-->
+<!--Seccion carousel-->
+<div class="container" style="display: flex; justify-content: center;">
+    <div class="row">
+        <div id="myCarousel" class="carousel slide" data-ride="carousel">
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+                {% for item in listado %}
+                    <li data-target="#myCarousel" data-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %}></li>
+                {% endfor %}
+            </ol>
+
+            <!-- Wrapper for slides -->
+            <div class="carousel-inner">
+                {% for item in listado %}
+                    <div class="carousel-item {% if forloop.first %}active{% endif %}" style="background-color: #6977F9;">
+                        <div class="card" style="width: 58rem; display: grid; grid-template-columns: 1fr 1fr; background-color: #6977F9;">
+                            <div class= "img-lista"> 
+                                <img class="card-img-top" src="{{ item.image_url }}" alt="{{ item.name }}">
+                            </div>
+                            <div class="card-body" style="display: flex; justify-content: space-around; align-items: center; flex-direction: column;">
+                                <h4>Titulo</h4>
+                                        <strong><h5 class="card-title">{{ item.titulo }}</h5></strong>  
+                                <h4>Descripción</h4>
+                                <strong><p class="card-text">{{ item.descripcion }}</p></strong>
+                                
+                                <a href="{% url 'listado' id=item.id %}" class="btn btn-warning">Ver más</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <!-- Controls -->
+            <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </div>
+</div>
+<!--Fin seccion carousel-->
+
+<!--Seccion listado de subastas-->
+<div class="row" style="display: flex; justify-content: center;">
+    {% for item in listado %}
+        <div class="card mx-3" style="width: 18rem; margin-top:4.5rem;">
+            <img class="card-img-top" src="{{ item.image_url }}" alt="{{ item.name }}">
+            <div class="card-body">
+                <h5 class="card-title">{{ item.titulo }}</h5>
+                <p class="card-text">{{ item.descripcion }}</p>
+                <a href="{% url 'listado' id=item.id %}" class="btn btn-primary">Ver más</a>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
+<!--Pendiente: estilos para aplicar en el listado principal-->
+

@@ -1,0 +1,31 @@
+body {
+    padding: 10px;
+}
+.title {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+}
+
+
+/*Estilos para la pagina de detalles de la lista*/
+.listoptions{
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: row;
+
+}
+
+.div1 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    }
+    
+.img { grid-area: 1 / 1 / 2 / 2; }
+
+.detalle { grid-area: 1 / 2 / 2 / 3; }
+   
